@@ -3,7 +3,6 @@
 from Graph_Algorithms.Graph import Graph, AdjacencySetGraph
 from typing import List
 from queue import Queue
-import numpy as np
 
 
 def topological_sort(graph: Graph) -> List[int]:
@@ -41,7 +40,6 @@ if __name__ == '__main__':
     g = AdjacencySetGraph(9, isdirected=True)
     g.add_edge(0, 1)
     g.add_edge(1, 2)
-    g.add_edge(2, 0)
     g.add_edge(2, 7)
     g.add_edge(2, 4)
     g.add_edge(2, 3)
