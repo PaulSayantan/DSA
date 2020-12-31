@@ -14,7 +14,6 @@ def topological_sort(graph: Graph) -> List[int]:
     topological_sorted_list = list()
     queue = Queue()
     indegree = dict()
-    visited = np.zeros(graph.num_vertices)
 
     for v in range(graph.num_vertices):
         indegree[v] = graph.get_indegree(v)
@@ -22,7 +21,6 @@ def topological_sort(graph: Graph) -> List[int]:
     for v in range(graph.num_vertices):
         if indegree[v] == 0:
             queue.put(v)
-            visited[v] = 1
 
     while not queue.empty():
         vertex_visited = queue.get()

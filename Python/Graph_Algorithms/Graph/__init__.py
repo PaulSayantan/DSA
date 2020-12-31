@@ -142,7 +142,7 @@ class AdjacencyMatrixGraph(Graph, ABC):
         if v >= self.num_vertices or v < 0:
             raise ValueError("Cannot access vertex %d" % v)
 
-        indegree = None
+        indegree = 0
         for i in range(self.num_vertices):
             if self.matrix[i][v] > 0:
                 indegree += 1
