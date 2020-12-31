@@ -1,12 +1,17 @@
 # Breadth First Search Algorithm
 
-from GraphAlgorithms.graph import Graph, AdjacencyMatrixGraph
+from Graph_Algorithms.Graph import Graph, AdjacencyMatrixGraph
 import numpy as np
 from queue import Queue
 from typing import List
 
 
 def breadth_first_search(graph: Graph, root: int) -> List[int]:
+    """
+    :param graph: Graph Data structure
+    :param root:  the starting node of graph traversal
+    :return:      list of nodes depicting traversal of the graph
+    """
     queue = Queue()
     queue.put(root)
     result = list()

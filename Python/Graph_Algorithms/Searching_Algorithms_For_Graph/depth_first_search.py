@@ -1,13 +1,13 @@
 # Depth First Search Algorithm
 
-from GraphAlgorithms.graph import Graph, AdjacencySetGraph
+from Graph_Algorithms.Graph import Graph, AdjacencySetGraph
 import numpy as np
 from typing import List
 
 
 def depth_first_search_iterative(graph: Graph, root: int) -> List[int]:
     """
-    :param graph:   importing the Graph Data structure defined in graph.py
+    :param graph:   Graph Data structure
     :param root:    the starting node of graph traversal
     :return:        list of nodes depicting traversal of the graph
     """
@@ -32,10 +32,10 @@ def depth_first_search_iterative(graph: Graph, root: int) -> List[int]:
 
 def depth_first_search_recursive(graph: Graph, visited: np.array, current: int, result: List[int]):
     """
-    :param result:      list of node traversed accordingly
-    :param graph:       importing the Graph Data structure defined in graph.py
+    :param graph:       Graph Data structure
     :param visited:     an array of nodes to keep track of nodes which are previously visited
     :param current:     the current node being visited
+    :param result:      list of node traversed accordingly
     :return:            result
     """
     if visited[current] == 1:

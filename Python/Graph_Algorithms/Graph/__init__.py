@@ -71,7 +71,7 @@ class AdjacencySetGraph(Graph, ABC):
             self.vertex_list.append(Node(i))
 
     def add_edge(self, v1, v2, weight=1):
-        if v1 >= self.num_vertices or v2 >= self.num_vertices or v1 < 0 or v2 <= 0:
+        if v1 >= self.num_vertices or v2 >= self.num_vertices or v1 < 0 or v2 < 0:
             raise ValueError("Vertices %d and %d are out of bounds" % (v1, v2))
 
         if weight != 1:
@@ -92,7 +92,7 @@ class AdjacencySetGraph(Graph, ABC):
         if v >= self.num_vertices or v < 0:
             raise ValueError("Cannot access vertex %d" % v)
 
-        indegree = None
+        indegree = 0
         for i in range(self.num_vertices):
             if v in self.get_adjacent_vertices(i):
                 indegree += 1
@@ -116,7 +116,7 @@ class AdjacencyMatrixGraph(Graph, ABC):
         self.matrix = np.zeros((num_vertices, num_vertices))
 
     def add_edge(self, v1, v2, weight=1):
-        if v1 >= self.num_vertices or v2 >= self.num_vertices or v1 < 0 or v2 <= 0:
+        if v1 >= self.num_vertices or v2 >= self.num_vertices or v1 < 0 or v2 < 0:
             raise ValueError("Vertices %d and %d are out of bounds" % (v1, v2))
 
         if weight < 1:
