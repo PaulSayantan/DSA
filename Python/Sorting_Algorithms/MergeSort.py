@@ -10,6 +10,15 @@ def MergeSort(arr: List[int], front: int, rear: int):
     Applying Divide and Conquer strategy for sorting
     This is an In-place Algorithm
 
+    T(n):
+        Best Case:  Ω(nlog(n))
+
+        Avg. Case:  Θ(nlog(n))
+
+        Worst Case: O(nlog(n))
+
+    S(n):   O(n)
+
     :param arr: Unsorted Array of integers
     :param front: the starting index of the array
     :param rear:  the ending index of the array
