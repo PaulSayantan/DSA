@@ -20,16 +20,16 @@ func main() {
 	fmt.Println(intArray)
 }
 
-// Insertion Sort Algorithm with T(n) = O(n^2) in worst case
+// InsertionSort Algorithm with T(n) = O(n^2) in worst case
 func InsertionSort(arr []int, size int) {
 	for j := 1; j < size; j++ {
 		key := arr[j]
 		i := j - 1
 
 		for i >= 0 && arr[i] > key {
-			arr[i + 1] = arr[i]
+			arr[i+1] = arr[i]
 			i = i - 1
 		}
-		arr[i + 1] = key
+		arr[i+1] = key
 	}
 }
