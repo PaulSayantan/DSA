@@ -7,8 +7,9 @@ import (
 
 // Node class
 type Node struct {
-	data int
-	next *Node
+	data     int
+	next     *Node
+	previous *Node // used in DoublyLinkedList in doublylinkedlist.go
 }
 
 // LinkedList class
@@ -32,8 +33,9 @@ func (llist *LinkedList) AddToHead(data int) {
 func (llist *LinkedList) IterateList() {
 	var node *Node
 	for node = llist.head; node != nil; node = node.next {
-		_, _ = fmt.Print(node.data, "-->")
+		_, _ = fmt.Print(node.data, " --> ")
 	}
+	fmt.Printf(" NULL\n")
 }
 
 // LastNode method -> returns the node at the end of the LinkedList
@@ -105,11 +107,64 @@ func (llist *LinkedList) AddAfter(data int, newData int) error {
 	return nil
 }
 
+// DeleteFromHead method -> deletes the head node of the LinkedList
+func (llist *LinkedList) DeleteFromHead() (*Node, error) {
+	if llist.head == nil {
+		return nil, fmt.Errorf("LinkedList is empty")
+	}
+	var temp = llist.head
+	llist.head = llist.head.next
+	return temp, nil
+}
+
+// DeleteFromEnd method -> deletes the end node of the LinkedList
+func (llist *LinkedList) DeleteFromEnd() (*Node, error) {
+	if llist.head == nil {
+		return nil, fmt.Errorf("LinkedList is empty")
+	}
+	var prev = llist.head
+	var curr = llist.head.next
+	for curr.next != nil {
+		prev = curr
+		curr = curr.next
+	}
+	prev.next = nil
+
+	return curr, nil
+
+}
+
+// DeleteAfter method -> deletes a node present after the given node
+func (llist *LinkedList) DeleteAfter(data int) (*Node, error) {
+	if llist.head == nil {
+		return nil, fmt.Errorf("LinkedList is empty")
+	}
+
+	var temp *Node
+	var prev = llist.head
+	var curr = llist.head.next
+	for curr != nil {
+		if curr.data == data {
+			temp = curr
+			curr = curr.next
+			prev.next = curr
+			return temp, nil
+		}
+		prev = curr
+		curr = curr.next
+	}
+	return nil, fmt.Errorf("no node present as %d", data)
+}
+
 func main() {
 	var llist LinkedList
 
 	llist.AddToHead(3)
 	llist.AddToHead(2)
+	llist.AddToHead(8)
+	llist.AddToHead(6)
+	llist.AddToHead(7)
+	llist.AddToHead(1)
 	llist.IterateList()
 
 	fmt.Println("\nCurrent Head: ", llist.head.data)
@@ -119,6 +174,20 @@ func main() {
 	if err != nil {
 		log.Println(err)
 	}
+	llist.IterateList()
 
+	del, err := llist.DeleteFromEnd()
+	if err != nil {
+		log.Println(err)
+	} else {
+		fmt.Println("\nDeleted From End: ", del.data)
+	}
+
+	del, err = llist.DeleteFromHead()
+	if err != nil {
+		log.Println(err)
+	} else {
+		fmt.Println("\nDeleted From Head: ", del.data)
+	}
 	llist.IterateList()
 }
