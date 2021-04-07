@@ -26,10 +26,12 @@ func (dllist *DoublyLinkedList) AddAfter(prevData, newData int) {
 	var newNode = &Node{}
 	newNode.data = newData
 	newNode.next = nil
+	newNode.previous = nil
 
 	for curr = dllist.head; curr != nil; curr = curr.next {
 		if curr.data == prevData {
 			newNode.next = curr.next
+			curr.next.previous = newNode
 			newNode.previous = curr
 			curr.next = newNode
 		}
@@ -39,19 +41,18 @@ func (dllist *DoublyLinkedList) AddAfter(prevData, newData int) {
 // NodeBetweenValues method -> return a node present between two nodes of doublylinkedlist
 func (dllist *DoublyLinkedList) NodeBetweenValues(prevData, afterData int) *Node {
 	var curr *Node
-	var node *Node
+
 	// iterate through the linkedlist
 	for curr = dllist.head; curr != nil; curr = curr.next {
 
 		if curr.previous != nil && curr.next != nil {
 			if curr.previous.data == prevData && curr.next.data == afterData {
-				node = curr
-				break
+				return curr
 			}
 		}
 	}
 
-	return node
+	return nil
 }
 
 // AddToHead method -> add a node to the head of doublylinkedlist
@@ -59,6 +60,7 @@ func (dllist *DoublyLinkedList) AddToHead(newData int) {
 	var node = &Node{}
 	node.data = newData
 	node.next = nil
+	node.previous = nil
 
 	if dllist.head != nil {
 		node.next = dllist.head
@@ -88,6 +90,7 @@ func (dllist *DoublyLinkedList) DeleteFromHead() (*Node, error) {
 	}
 
 	var temp = dllist.head
+	dllist.head.next.previous = nil
 	dllist.head = dllist.head.next
 	return temp, nil
 }
@@ -100,9 +103,9 @@ func (dllist *DoublyLinkedList) DeleteFromEnd() (*Node, error) {
 
 	var temp = dllist.tail
 
-	//var prev = dllist.tail.previous
-	//prev.next = nil
-	dllist.tail.previous.next = nil
+	var prev = dllist.tail.previous
+	prev.next = nil
+	dllist.tail = prev
 
 	return temp, nil
 }
@@ -121,6 +124,7 @@ func (dllist *DoublyLinkedList) DeleteAfter(givenData int) (*Node, error) {
 			temp = curr
 			curr = curr.next
 			prev.next = curr
+			curr.previous = prev
 			return temp, nil
 		}
 		prev = curr
@@ -129,11 +133,22 @@ func (dllist *DoublyLinkedList) DeleteAfter(givenData int) (*Node, error) {
 	return nil, fmt.Errorf("Given node not found in DoublyLinkedList")
 }
 
-// IterateList method -> prints the doublylinkedlist
-func (dllist *DoublyLinkedList) IterateList() {
+// IterateListFromHead method -> prints the doublylinkedlist from head to tail
+func (dllist *DoublyLinkedList) IterateListFromHead() {
 	var curr *Node
 	fmt.Println("\nDoublyLinkedList: ")
 	for curr = dllist.head; curr != nil; curr = curr.next {
+		fmt.Print("[ ", curr.data, " ] <-> ")
+	}
+	fmt.Print("NULL\n")
+	fmt.Println()
+}
+
+// IterateListFromTail method -> prints the doublylinkedlist from tail to head
+func (dllist *DoublyLinkedList) IterateListFromTail() {
+	var curr *Node
+
+	for curr = dllist.tail; curr != nil; curr = curr.previous {
 		fmt.Print("[ ", curr.data, " ] <-> ")
 	}
 	fmt.Print("NULL\n")
@@ -151,7 +166,7 @@ func main() {
 	dllist.AddToEnd(84)
 	dllist.AddAfter(12, 5)
 
-	dllist.IterateList()
+	dllist.IterateListFromHead()
 
 	node := dllist.NodeBetweenValues(12, 15) // 5
 	fmt.Println("Node between 12 and 15: [", node.data, "]")
@@ -170,5 +185,6 @@ func main() {
 		fmt.Println("Deleted Node (From Tail): [", del.data, "]")
 	}
 
-	dllist.IterateList()
+	dllist.IterateListFromHead()
+	dllist.IterateListFromTail()
 }
