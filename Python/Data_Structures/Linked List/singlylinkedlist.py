@@ -13,6 +13,9 @@ class SinglyLinkedList:
         self.size = 0
 
     def printList(self):
+        """
+            Printlist Function to Print Nodes in LinkedList manner
+        """
         if self.size == 0:
             print("Linked List is Empty !!")
             return

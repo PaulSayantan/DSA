@@ -8,11 +8,14 @@
 
 """
 
+# ---------------------------Memoization Implementation-----------------------------
+
+
 # to memoize all the sub-paths visited
 grid_memo = dict()
 
 
-def gridTraveller(row: int, column: int):
+def gridTraveller(row: int, column: int) -> int:
     """
 
     :param row: number of rows in the grid
@@ -34,6 +37,15 @@ def gridTraveller(row: int, column: int):
 
     grid_memo[grid_cell] = gridTraveller(row - 1, column) + gridTraveller(row, column - 1)
     return grid_memo[grid_cell]
+
+
+# ---------------------------Tabulation Implementation-----------------------------
+
+
+def gridTraveller_tabulation(row: int, column: int) -> int:
+    grid_tab = [[0] * row] * column
+
+    grid_tab[1][1] = 1
 
 
 if __name__ == '__main__':
