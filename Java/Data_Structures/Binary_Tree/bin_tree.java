@@ -1,261 +1,183 @@
 package Data_Structures.Binary_Tree;
 
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class bin_tree {
     public static void main(String[] args) {
-        Binary_Tree b_tree = new Binary_Tree();
+		Binary_tree b_tree = new Binary_tree();
 
-        b_tree.insert_node(53);
-        b_tree.insert_node(30);
-        b_tree.insert_node(72);
-        b_tree.insert_node(14);
-        b_tree.insert_node(39);
-        b_tree.insert_node(34);
-        b_tree.insert_node(9);
-        b_tree.insert_node(23);
-        b_tree.insert_node(47);
-        b_tree.insert_node(61);
-        b_tree.insert_node(79);
-        b_tree.insert_node(84);
+		Node root = new Node(10);
+        root.left = new Node(11);
+        root.left.left = new Node(7);
+        root.right = new Node(9);
+        root.right.left = new Node(15);
+        root.right.right = new Node(8);
 
-        b_tree.inorder_traversal(b_tree.getRoot());
+		b_tree.set_root(root);
+		b_tree.inorder_traversal(b_tree.get_root());
+		System.out.println();
 
-        System.out.println("Maximum: " + b_tree.maximum_node());
-        System.out.println("Minimum: " + b_tree.minimum_node());
-
-        System.out.println(b_tree.delete(23));
-        b_tree.inorder_traversal(b_tree.getRoot());
-
-
-        System.out.println(b_tree.delete(30));
-        b_tree.postorder_traversal(b_tree.getRoot());
-
-        System.out.println(b_tree.delete(79));
-        b_tree.preorder_traversal(b_tree.getRoot());
-    }
+		// deletion of node 11 from Binary Tree
+		b_tree.delete(root, 11);
+		b_tree.inorder_traversal(b_tree.get_root());
+		System.out.println();
+		
+		// insertion of node with value 12 in Binary Tree
+		b_tree.insert(new Node(12));
+		b_tree.inorder_traversal(b_tree.get_root());
+		System.out.println();
+		
+	}
+	
 }
 
-class Binary_Tree {
-    private Node root;
+class Binary_tree {
+	private Node root;
 
-    public void setRoot(Node root) {
-        this.root = root;
-    }
+	public Binary_tree() {
+		root = null;
+	}
+	
+	public void set_root(Node root) {
+		this.root = root;
+	}
 
-    public Node getRoot() {
-        return root;
-    }
+	public Node get_root() {
+		return root;
+	}
 
-    // Finding a node -> Avg. Case: O(logN)  Worst Case: O(N)
-    public Node find(int data) {
-        Node current = getRoot();
+	// function to insert node
+	public void insert(Node new_node) {
+		Node curr = get_root();
+		
+		// check if node is empty
+		if (curr == null) {
+			return;
+		}
 
-        while (data != current.data) {
-            if (data < current.data) {
-                current = current.left_child;
-            } else {
-                current = current.right_child;
-            }
-            if (current == null) {
-                return null;
-            }
-        }
+		Queue<Node> node_q = new LinkedList<Node>();
+		node_q.add(curr);
 
-        return current;
-    }
+		while (!node_q.isEmpty()) {
+			Node temp = node_q.remove();
 
-    // Insert a node -> Avg. Case: O(logN)  Worst Case: O(N) or O(h) where h is the height of the tree
-    public void insert_node(int data) {
-        Node newNode = new Node(data);
+			if (temp.left == null) {
+				temp.left = new_node;
+				break;
+			} else {
+				node_q.add(temp.left);
+			}
 
-        if (root == null) {
-            root = newNode;
-        } else {
-            Node current = root;
-            Node parent;
+			if (temp.right == null) {
+				temp.right = new_node;
+				break;
+			} else {
+				node_q.add(temp.right);
+			}
+		}
+	}
 
-            while (true) {
-                parent = current;
-                if (data < current.data) {
-                    current = current.left_child;
 
-                    if (current == null) {
-                        parent.left_child = newNode;
-                        return;
-                    }
-                } else {
-                    current = current.right_child;
+	// inorder traversal of Binary Tree
+	public void inorder_traversal(Node root) {
+		if (root == null) {
+			return;
+		}
+		inorder_traversal(root.left);
+		System.out.print(root.data + " ");
+		inorder_traversal(root.right);
+	}
 
-                    if (current == null) {
-                        parent.right_child = newNode;
-                        return;
-                    }
-                }
-            }
-        }
-    }
+	// function to delete deepest rightmost node in Binary Tree
+	public void delete_deepest(Node node, Node delNode) {
+		Queue<Node> node_q = new LinkedList<Node>();
 
-    public Node delete(int data) {
-        Node current = getRoot();
-        Node parent = getRoot();
-        Node temp;
-        boolean isLeftChild = true;     // w.r.t parent is current left_child or right_child ?
+		node_q.add(node);
 
-        while (current.data != data) {
-            parent = current;
-            if (data < current.data) {
-                isLeftChild = true;
-                current = current.left_child;
-            } else {
-                isLeftChild = false;
-                current = current.right_child;
-            }
-            if (current == null) {
-                return null;
-            }
-        }
+		Node temp = null;
+		while (!node_q.isEmpty()) {
+			temp = node_q.remove();
 
-        // Case 1: when deleted node is a leaf node (node with no children)
-        if (current.left_child == null && current.right_child == null) {
-            temp = current;
-            if (current == root) {
-                setRoot(null);
-            }else if (isLeftChild) {
-                parent.left_child = null;
-            } else {
-                parent.right_child = null;
-            }
-            return temp;
-        }
+			if (temp == delNode) {
+				temp = null;
+				return;
+			}
 
-        // Case 2: when deleted node has only one child (either left_child or right_child)
-        else if (current.right_child == null) {
-            temp = current;
-            if (current == root) {
-                root = current.left_child;
-            } else if (isLeftChild) {
-                parent.left_child = current.left_child;
-            } else {
-                parent.right_child = current.left_child;
-            }
-            return temp;
-        } else if (current.left_child == null) {
-            temp = current;
-            if (current == root) {
-                root = current.right_child;
-                return temp;
-            } else if (isLeftChild) {
-                parent.left_child = current.right_child;
-            } else {
-                parent.right_child = current.right_child;
-            }
-            return temp;
-        }
+			if (temp.right != null) {
+				if (temp.right == delNode) {
+					temp.right = null;
+					return;
+				}
+			} else {
+				node_q.add(temp.right);
+			}
 
-        // Case 3: when deleted node has both left and right children
-        else {
-            temp = current;
-            Node successor = get_successor(current);
-            if (current == root) {
-                root = successor;
+			if (temp.left != null) {
+				if (temp.left == delNode) {
+					temp.left = null;
+					return;
+				}
+			} else {
+				node_q.add(temp.left);
+			}
+		}
+	}
+	
+	
+	// Deletion of Node in Binary Tree
+	public void delete(Node node, int data) {
+		if (node == null) {
+			return;
+		}
 
-            } else if (isLeftChild) {
-                parent.left_child = successor;
+		if (node.left == null && node.right == null) {
+			if (node.data == data) {
+				node = null;
+				return;
+			} else {
+				return;
+			}
+		}
 
-            } else {
-                parent.right_child = successor;
-                successor.right_child = current.right_child;
+		Queue<Node> node_q = new LinkedList<Node>();
+		node_q.add(node);
 
-            }
-            return temp;
-        }
-    }
+		Node temp = null;
+		Node key_node = null;
 
-    private Node get_successor(Node node) {
-        Node parent = node;
-        Node successor = node;
-        Node current = node.right_child;
+		while (!node_q.isEmpty()) {
+			temp = node_q.remove();
 
-        while (current != null) {
-            parent = successor;
-            successor = current;
-            current = current.left_child;
-        }
-        if (successor != node.right_child) {
-            parent.left_child = successor.right_child;
-            successor.right_child = node.right_child;
-        }
-        return successor;
-    }
+			if (temp.data == data) {
+				key_node = temp;
+			}
 
-    public void inorder_traversal(Node current) {
-        current = getRoot();
-        if (current != null) {
-            inorder_traversal(current.left_child);
-            System.out.println("Node: " + current.data);
-            inorder_traversal(current.right_child);
-        }
-    }
+			if (temp.left != null) {
+				node_q.add(temp.left);
+			}
 
-    public void postorder_traversal(Node current) {
-        current = getRoot();
-        if (current != null) {
-            postorder_traversal(current.left_child);
-            postorder_traversal(current.right_child);
-            System.out.println("Node: " + current.data);
-        }
-    }
+			if (temp.right != null) {
+				node_q.add(temp.right);
+			}
+		}
 
-    public void preorder_traversal(Node current) {
-        current = getRoot();
-        if (current != null) {
-            System.out.println("Node: " + current.data);
-            preorder_traversal(current.left_child);
-            preorder_traversal(current.right_child);
-        }
-    }
-
-    public int maximum_node() {
-        Node current = getRoot();
-        while (current.right_child != null) {
-            current = current.right_child;
-        }
-        return current.data;
-    }
-
-    public int minimum_node() {
-        Node current = getRoot();
-        while (current.left_child != null) {
-            current = current.left_child;
-        }
-        return current.data;
-    }
-
-    @Override
-    public String toString() {
-        return "Binary_Tree{" +
-                "root=" + root.toString() +
-                "}";
-    }
+		if (key_node != null) {
+			int del_n = temp.data;
+			delete_deepest(get_root(), temp);
+			key_node.data = del_n;
+		}
+	}
 }
+
 
 class Node {
-    int data;
-    Node left_child;
-    Node right_child;
-
-    public Node(int data) {
-        this.data = data;
-        this.left_child = null;
-        this.right_child = null;
-    }
-
-    @Override
-    public String toString() {
-        return "Node{" +
-                "\ndata=" + data +
-                ", left=" + left_child +
-                ", right=" + right_child +
-                "}";
-    }
+	int data;
+	Node left, right;
+	
+	public Node(int data) {
+		this.data = data;
+		this.left = null;
+		this.right = null;
+	}	
 }
