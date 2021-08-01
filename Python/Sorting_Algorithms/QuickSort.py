@@ -2,6 +2,7 @@
 
 from typing import List
 import unittest
+from random import sample
 
 
 def quick_sort(arr: List[int], front: int, rear: int):
@@ -42,13 +43,12 @@ def Partition(arr: List[int], front: int, rear: int):
     pivot = arr[rear]
 
     i = front - 1
-    for j in range(front, rear):
+    for j in range(front, rear + 1):
         if arr[j] < pivot:
             i += 1
             arr[i], arr[j] = arr[j], arr[i]
 
     arr[i + 1], arr[rear] = arr[rear], arr[i + 1]
-    # print("Pivot at position: ", i + 1);
     return i + 1
 
 
@@ -65,6 +65,10 @@ class SortingTest(unittest.TestCase):
 
     def test4(self):
         self.assertEqual(quick_sort([], 0, 0), [])
+
+    def test5(self):
+        test_arr = sample(range(0, 54), 20)
+        self.assertEqual(quick_sort(test_arr, 0, len(test_arr) - 1), sorted(test_arr))
 
 
 if __name__ == '__main__':
