@@ -115,25 +115,27 @@ class BinarySearchTree:
             if node.left is None and node.right is None:
                 return None
 
-            # case 3: node has both left and right child
+            # case 2: node has both left and right child
             elif node.left and node.right:
                 # get the successor of the node to be deleted
                 successor = self.get_successor(node)
                 val = successor.data
-                # delete the successor node
+                # delete the successor node from its original position
                 self.delete(self.root, val)
                 # set the value of the node as that of successor
                 node.data = val
 
             else:
-                # node has either left or right child
+                # case 3: node has either left or right child
                 child = node.left if node.left else node.right
                 node = child
         return node
 
+    # returns successor of any node in BST
     def get_successor(self, node: Node) -> Node:
         return self.minimum_node(node.right)
 
+    # smallest node present in the subtree, taking node is the root
     def minimum_node(self, node: Node) -> Node:
         while node.left:
             node = self.minimum_node(node.left)
