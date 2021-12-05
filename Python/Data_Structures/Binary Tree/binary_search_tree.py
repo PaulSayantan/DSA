@@ -2,12 +2,26 @@
 Implementation of Binary Search Tree in Python
 """
 
+
+class Node:
+    def __init__(self, data):
+        self.data = data
+        self.left = None
+        self.right = None
+
+    def __str__(self):
+        return str(self.data)
+
+    def __repr__(self):
+        return str(self.data)
+
+
 class BinarySearchTree:
     # initialize the BST
     def __init__(self):
         self.root = None
         self.size = 0
-    
+
     # insert a new node into the BST
     def insert(self, data):
         if not self.root:
@@ -15,7 +29,7 @@ class BinarySearchTree:
         else:
             self.insertNode(data, self.root)
         self.size += 1
-    
+
     # insert a new node into the BST
     def insertNode(self, data, node):
         if data < node.data:
@@ -28,14 +42,14 @@ class BinarySearchTree:
                 self.insertNode(data, node.right)
             else:
                 node.right = Node(data)
-    
+
     # search for a node in the BST
     def search(self, data):
         if self.root:
             return self.searchNode(data, self.root)
         else:
             return False
-    
+
     # search for a node in the BST
     def searchNode(self, data, node):
         if data == node.data:
@@ -46,59 +60,35 @@ class BinarySearchTree:
             return self.searchNode(data, node.right)
         else:
             return False
-    
-    # print the BST
-    def printTree(self):
-        if self.root:
-            self.printNode(self.root)
-        else:
-            print("Tree is empty")
-    
+
     # print the BST as inorder traversal
-    def printNode(self, node):
-        if node.left:
-            self.printNode(node.left)
-        print(node.data)
-        if node.right:
-            self.printNode(node.right)
-    
+    def inorder(self, node):
+        if node:
+            self.inorder(node.left)
+            print(node.data, end=' ')
+            self.inorder(node.right)
+
     # print the BST as preorder traversal
-    def printPreorder(self):
-        if self.root:
-            self.printPreorderNode(self.root)
-        else:
-            print("Tree is empty")
-    
-    # print the BST as preorder traversal
-    def printPreorderNode(self, node):
-        print(node.data)
-        if node.left:
-            self.printPreorderNode(node.left)
-        if node.right:
-            self.printPreorderNode(node.right)
-    
+    def preorder(self, node):
+        if node:
+            print(node.data, end=' ')
+            self.preorder(node.left)
+            self.preorder(node.right)
+
     # print the BST as postorder traversal
-    def printPostorder(self):
-        if self.root:
-            self.printPostorderNode(self.root)
-        else:
-            print("Tree is empty")
-    
-    # print the BST as postorder traversal
-    def printPostorderNode(self, node):
-        if node.left:
-            self.printPostorderNode(node.left)
-        if node.right:
-            self.printPostorderNode(node.right)
-        print(node.data)
-    
+    def postorder(self, node):
+        if node:
+            self.postorder(node.left)
+            self.postorder(node.right)
+            print(node.data, end=' ')
+
     # print the BST as levelorder traversal
     def printLevelorder(self):
         if self.root:
             self.printLevelorderNode(self.root)
         else:
             print("Tree is empty")
-    
+
     # print the BST as levelorder traversal
     def printLevelorderNode(self, node):
         queue = [node]
@@ -109,67 +99,46 @@ class BinarySearchTree:
                 queue.append(node.left)
             if node.right:
                 queue.append(node.right)
-    
+
     # delete a node from the BST
-    def delete(self, data):
-        if self.size > 1:
-            self.deleteNode(data, self.root)
-            self.size -= 1
-        else:
-            if self.root:
-                self.root = None
-            else:
-                self.size = 0
-    
-    # delete a node from the BST
-    def deleteNode(self, data, node):
+    def delete(self, node: Node, data: int) -> Node:
+        if node is None:
+            return node
+
+        # reach the position where the node to be deleted is present
         if data < node.data:
-            if node.left:
-                self.deleteNode(data, node.left)
-            else:
-                print("Element not found")
+            node.left = self.delete(node.left, data)
         elif data > node.data:
-            if node.right:
-                self.deleteNode(data, node.right)
-            else:
-                print("Element not found")
+            node.right = self.delete(node.right, data)
         else:
-            if node.left and node.right:
-                self.delMin(node.right)
-                node.data = node.right.data
-                node.right = self.delMin(node.right)
-            elif node.left:
-                node = node.left
-            elif node.right:
-                node = node.right
+            # case 1: node has no child - a leaf node
+            if node.left is None and node.right is None:
+                return None
+
+            # case 3: node has both left and right child
+            elif node.left and node.right:
+                # get the successor of the node to be deleted
+                successor = self.get_successor(node)
+                val = successor.data
+                # delete the successor node
+                self.delete(self.root, val)
+                # set the value of the node as that of successor
+                node.data = val
+
             else:
-                node = None
+                # node has either left or right child
+                child = node.left if node.left else node.right
+                node = child
         return node
 
-    # delete the smallest node in the BST
-    def delMin(self, node):
-        if node.left:
-            node.left = self.delMin(node.left)
-        return node
-    
-    # delete the largest node in the BST
-    def delMax(self, node):
-        if node.right:
-            node.right = self.delMax(node.right)
+    def get_successor(self, node: Node) -> Node:
+        return self.minimum_node(node.right)
+
+    def minimum_node(self, node: Node) -> Node:
+        while node.left:
+            node = self.minimum_node(node.left)
         return node
 
-
-class Node:
-    def __init__(self, data):
-        self.data = data
-        self.left = None
-        self.right = None
-    
-    def __str__(self):
-        return str(self.data)
-    
-    def __repr__(self):
-        return str(self.data)
 
 if __name__ == "__main__":
     bst = BinarySearchTree()
@@ -186,5 +155,11 @@ if __name__ == "__main__":
     bst.insert(7)
     bst.insert(9)
     bst.insert(11)
-    
-    bst.printTree()
+
+    bst.inorder(bst.root)
+    print()
+
+    bst.delete(bst.root, 3)
+
+    bst.inorder(bst.root)
+    print()
